@@ -27,18 +27,18 @@ def save_data(df: pd.DataFrame, filepath: str) -> None:
         raise Exception(f"Failed to save data: {e}")
 
 def main():
-    raw_data_path = 'C:/Users/jainn/OneDrive/Documents/AquaPredict/data/raw'
+    raw_data_path = 'data/raw'
     train_data = load_data(raw_data_path, 'train_data.csv')
     test_data = load_data(raw_data_path, 'test_data.csv')
     try:
         train_p_d = f_m_w_m(train_data)
         test_p_d = f_m_w_m(test_data)
 
-        data_preprocessed_path = os.path.join('data', 'preprocessed')
+        data_preprocessed_path = os.path.join('data', 'processed')
         os.makedirs(data_preprocessed_path, exist_ok=True)
 
-        save_data(train_p_d, os.path.join(data_preprocessed_path, 'train_data_preprocessed.csv'))
-        save_data(test_p_d, os.path.join(data_preprocessed_path, 'test_data_preprocessed.csv'))
+        save_data(train_p_d, os.path.join(data_preprocessed_path, 'train_data_processed.csv'))
+        save_data(test_p_d, os.path.join(data_preprocessed_path, 'test_data_processed.csv'))
     except Exception as e:
         raise Exception(f"Failed to execute main: {e}")
 
