@@ -40,15 +40,31 @@ def evaluate_model(model: object, X: pd.DataFrame, y: pd.Series) -> dict:
         recall = recall_score(y, y_pred)
         f1_s = f1_score(y, y_pred)
         roc_auc = roc_auc_score(y, y_pred)
-        with Live(save_dvc_exp = True) as live:
-            live.log("accuracy", acc)
-            live.log("precision", prec)
-            live.log("recall", recall)
-            live.log("f1_score", f1_s)
-            live.log("roc_auc", roc_auc)
-            live.log("test_size", test_size)
-            live.log("n_estimators", n_estimators)
-        metrics_dict = {'accuracy': acc, 'precision': prec, 'recall': recall, 'f1_score': f1_s, 'roc_auc': roc_auc}
+        
+        # Create Live object with a specific step name
+        live = Live("evaluation")
+        
+        # Log metrics using log_metric
+        live.log_metric("accuracy", acc)
+        live.log_metric("precision", prec)
+        live.log_metric("recall", recall)
+        live.log_metric("f1_score", f1_s)
+        live.log_metric("roc_auc", roc_auc)
+        live.log_metric("test_size", test_size)
+        live.log_metric("n_estimators", n_estimators)
+        
+        # Make sure to end the Live session
+        live.end()
+        
+        metrics_dict = {
+            'accuracy': acc, 
+            'precision': prec, 
+            'recall': recall, 
+            'f1_score': f1_s, 
+            'roc_auc': roc_auc,
+            'test_size': test_size,
+            'n_estimators': n_estimators
+        }
         return metrics_dict
     except Exception as e:
         raise Exception(f"Failed to evaluate model: {e}")

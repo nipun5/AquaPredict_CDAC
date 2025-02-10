@@ -30,3 +30,8 @@ stages:
     - src/model/model_eval.py
     metrics:
     - reports/metrics.json
+metrics:
+- evaluation/metrics.json
+plots:
+- evaluation/plots/metrics:
+    x: step
