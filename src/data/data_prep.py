@@ -2,48 +2,62 @@ import pandas as pd
 import numpy as np
 import os
 
-def load_data(directory: str, filename: str) -> pd.DataFrame:
-    filepath = os.path.join(directory, filename)
-    try:
-        data = pd.read_csv(filepath)
-        return data
-    except Exception as e:
-        raise Exception(f"Failed to load data: from {filepath}:{e}")
 
-def f_m_w_m(df):
+def load_data(filepath : str) -> pd.DataFrame:
+    try:
+        return pd.read_csv(filepath)
+    except Exception as e:
+        raise Exception(f"Error loading data from {filepath}:{e}")
+# train_data = pd.read_csv("./data/raw/train.csv")
+# test_data = pd.read_csv("./data/raw/test.csv")
+
+
+def fill_missing_with_mean(df):
     try:
         for column in df.columns:
             if df[column].isnull().any():
-                m_v = df[column].median()
-                df[column].fillna(m_v, inplace=True)
+                mean_value = df[column].mean()
+                df[column].fillna(mean_value,inplace=True)
         return df
     except Exception as e:
-        raise Exception(f"Failed to fill missing values: {e}")
+        raise Exception(f"Error Filling missing values with mean:{e}")
 
-def save_data(df: pd.DataFrame, filepath: str) -> None:
+def save_data(df : pd.DataFrame, filepath: str) -> None:
     try:
         df.to_csv(filepath, index=False)
     except Exception as e:
-        raise Exception(f"Failed to save data: {e}")
+        raise Exception(f"Error saving data to {filepath}:{e}")
+
+# train_processed_data = fill_missing_with_median(train_data)
+# test_processed_data = fill_missing_with_median(test_data)
 
 def main():
-    raw_data_path = 'data/raw'
-    train_data = load_data(raw_data_path, 'train_data.csv')
-    test_data = load_data(raw_data_path, 'test_data.csv')
     try:
-        train_p_d = f_m_w_m(train_data)
-        test_p_d = f_m_w_m(test_data)
+        raw_data_path = "./data/raw/"
+        processed_data_path = "./data/processed"
 
-        data_preprocessed_path = os.path.join('data', 'processed')
-        os.makedirs(data_preprocessed_path, exist_ok=True)
+        train_data = load_data(os.path.join(raw_data_path,"train.csv"))
+        test_data = load_data(os.path.join(raw_data_path,"test.csv"))
 
-        save_data(train_p_d, os.path.join(data_preprocessed_path, 'train_data_processed.csv'))
-        save_data(test_p_d, os.path.join(data_preprocessed_path, 'test_data_processed.csv'))
+        train_processed_data = fill_missing_with_mean(train_data)
+        test_processed_data = fill_missing_with_mean(test_data)
+
+    # data_path= os.path.join("data","processed")
+
+        os.makedirs(processed_data_path)
+
+        save_data(train_processed_data,os.path.join(processed_data_path,"train_processed.csv"))
+        save_data(test_processed_data,os.path.join(processed_data_path,"test_processed.csv"))
     except Exception as e:
-        raise Exception(f"Failed to execute main: {e}")
-
+        raise Exception(f"An error occurred :{e}")
+    
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        raise Exception(f"Failed to execute main: {e}")
+    main()
+
+
+
+
+
+
+
+
