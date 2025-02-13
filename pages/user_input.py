@@ -17,31 +17,34 @@ model_rf = load_model()
 
 def app():
     st.title('Water Potability Prediction')
+    st.markdown("Enter the water quality parameters below:")
 
     # User inputs with min and max values in labels
-    ph = st.number_input('ph (0.0 to 14.0)', value=6.704635, min_value=0.0, max_value=14.0)
-    Hardness = st.number_input('Hardness (0.0 to 500.0)', value=230.766940, min_value=0.0, max_value=500.0)
-    Solids = st.number_input('Solids (0.0 to 50000.0)', value=9727.761716, min_value=0.0, max_value=50000.0)
-    Chloramines = st.number_input('Chloramines (0.0 to 15.0)', value=5.943695, min_value=0.0, max_value=15.0)
-    Sulfate = st.number_input('Sulfate (0.0 to 1000.0)', value=223.235816, min_value=0.0, max_value=1000.0)
-    Conductivity = st.number_input('Conductivity (0.0 to 2000.0)', value=405.761571, min_value=0.0, max_value=2000.0)
-    Organic_carbon = st.number_input('Organic Carbon (0.0 to 30.0)', value=12.826509, min_value=0.0, max_value=30.0)
-    Trihalomethanes = st.number_input('Trihalomethanes (0.0 to 200.0)', value=74.385199, min_value=0.0, max_value=200.0)
-    Turbidity = st.number_input('Turbidity (0.0 to 10.0)', value=3.422179, min_value=0.0, max_value=10.0)
+    ph_level = st.slider("pH Level 🌡️", 0.00, 14.00, 7.00)
+    hardness = st.slider("Hardness (mg/L) 🧪", 0.00, 500.00, 250.00)
+    chloramines = st.slider("Chloramines (mg/L) 🧴", 0.00, 15.00, 7.50)
+    conductivity = st.slider("Conductivity (μS/cm) ⚡", 0.00, 800.00, 400.00)
+    organic_carbon = st.slider("Organic Carbon (mg/L) 🌿", 0.00, 30.00, 15.00)
+    trihalomethanes = st.slider("Trihalomethanes (μg/L) 🧫", 0.00, 120.00, 60.00)
+    turbidity = st.slider("Turbidity (NTU) 🌊", 0.00, 10.00, 5.00)
 
+    # Number inputs for solids and sulfate
+    solids = st.number_input("Solids (ppm) 🧱", min_value=0.0, value=500.0)
+    sulfate = st.number_input("Sulfate (mg/L) 🧂", min_value=0.0, value=250.0)
+    
     # Prediction
     if st.button('Predict'):
         # Preprocess user input
         data = {
-            'ph': ph,
-            'Hardness': Hardness,
-            'Solids': Solids,
-            'Chloramines': Chloramines,
-            'Sulfate': Sulfate,
-            'Conductivity': Conductivity,
-            'Organic_carbon': Organic_carbon,
-            'Trihalomethanes': Trihalomethanes,
-            'Turbidity': Turbidity
+            'ph': ph_level,
+            'Hardness': hardness,
+            'Solids': solids,
+            'Chloramines': chloramines,
+            'Sulfate': sulfate,
+            'Conductivity': conductivity,
+            'Organic_carbon': organic_carbon,
+            'Trihalomethanes': trihalomethanes,
+            'Turbidity': turbidity
         }
         features = pd.DataFrame(data, index=[0])
 
@@ -52,6 +55,19 @@ def app():
             # Output prediction
             st.subheader('Prediction')
             potability = 'Potable' if prediction[0] == 1 else 'Not Potable'
-            st.write(potability)
+            
+            if potability == 'Potable':
+                st.success(potability)
+                st.balloons()
+            else:
+                st.markdown(
+                    f"""
+                    <div style="background-color: red; padding: 10px; border-radius: 5px;">
+                        <h3 style="color: white;">{potability}</h3>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
         else:
             st.error("Model not loaded.")
+    
