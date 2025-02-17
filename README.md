@@ -51,13 +51,13 @@ This project follows a structured workflow to streamline the MLOps process:
   - Register the best model with optimal parameters and metadata.
   - Deploy the model using **FastAPI** or **Streamlit** for predictions.
 
-### Tkinter Desktop Application 🖥️
-- **Tkinter App**:
-   - A simple, user-friendly desktop app built with Tkinter.
-   - Automatically fetches the latest model from the MLflow model registry.
-   - Allows users to input data and receive potability predictions.
+## Running the Application
 
----
+### Streamlit Application
+Launch the Streamlit application by running:
+
+```bash
+streamlit run Implementation/app.py 
 
 ## 📦 Results and Analysis
 - **Best Model**: Random Forest with mean imputation.
