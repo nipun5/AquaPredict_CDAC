@@ -24,7 +24,7 @@ Welcome! This project demonstrates an end-to-end MLOps workflow to predict water
 Launch the Streamlit application by running:
 
 ```
-streamlit run Implementation/app.py
+streamlit run app.py
 ```
 
 This command opens the interactive dashboard in your default web browser. Use the sidebar menu to navigate between different pages such as homepage, synthetic dataset, prediction, and CSV upload.
